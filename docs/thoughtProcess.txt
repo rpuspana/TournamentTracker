@@ -1,0 +1,9 @@
+how do we get that connection information ?
+Ans: use a global variable, static class for data source info. 
+This class will tell me which data sources are available:
+- sql, my sql, text file, text files
+
+how do we connecto to different data sources  to do the same task ?
+(save either to text file or database or both)
+
+interface for data sources
