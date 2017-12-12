@@ -27,30 +27,20 @@ namespace TrackerUI.Forms
                 PrizeModel model = new PrizeModel(placeNameValue.Text, placeNumberValue.Text,
                                                   prizeAmountValue.Text, prizePercentageValue.Text);
 
-                // save the model
-                foreach(IDataConnection db in GlobalConfig.Connections)
-                {
-                    db.CreatePrize(model);
-
-                }
+                GlobalConfig.Connection.CreatePrize(model);
 
                 MessageBox.Show($"{model.PlaceNumber}, {model.PlaceName}, {model.PrizeAmount}, {model.PrizePercentage}", "result", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                CleanForm();
+                placeNameValue.Text = "";
+                placeNumberValue.Text = "";
+                prizeAmountValue.Text = "0";
+                prizePercentageValue.Text = "0";
 
             }
             else
             {
                 MessageBox.Show("This form has invalid information. Please check it and try again", "Invalid form", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void CleanForm()
-        {
-            placeNameValue.Text = "";
-            placeNumberValue.Text = "";
-            prizeAmountValue.Text = "0";
-            prizePercentageValue.Text = "0";
         }
 
         private bool ValidateForm()
