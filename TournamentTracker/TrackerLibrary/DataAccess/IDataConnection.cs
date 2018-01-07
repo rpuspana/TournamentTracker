@@ -10,7 +10,7 @@ namespace TrackerLibrary.DataAccess
     public interface IDataConnection
     {
         // contract for a method
-        // everythin in here is public because of the access modifier of the class
+        // everything in here is public because of the access modifier of the class
         PrizeModel CreatePrize(PrizeModel model);
     }
 }

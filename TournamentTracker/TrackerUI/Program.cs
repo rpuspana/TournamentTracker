@@ -20,7 +20,10 @@ namespace TrackerUI
             Application.SetCompatibleTextRenderingDefault(false);
 
             // Initialize the database connections
-            GlobalConfig.InitializeConnections(DatabaseType.Sql);
+            //GlobalConfig.InitializeConnections(DatabaseType.Sql);
+
+            // Write data to a text file
+            GlobalConfig.InitializeConnections(DatabaseType.TextFile);
 
             // pauses this thread with this method
             // don't end this line until the form in it closes

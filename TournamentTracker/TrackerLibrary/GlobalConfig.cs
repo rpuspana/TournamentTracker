@@ -25,8 +25,8 @@ namespace TrackerLibrary
             else if (db == DatabaseType.TextFile)
             {
                 // TODO - create the text file connection
-                TextConnector textFConn = new TextConnector();
-                Connection = textFConn;
+                TextConnector textFileConn = new TextConnector();
+                Connection = textFileConn;
             }
         }
 
