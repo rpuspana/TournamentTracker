@@ -73,6 +73,11 @@ namespace TrackerLibrary.DataAccess.TextHelpers
             return output;
         }
 
+        /// <summary>
+        /// Create a csv file with each line representing input data from CreatePrize since the application was launched
+        /// </summary>
+        /// <param name="models">The PrizeModel list to write to a text file</param>
+        /// <param name="fileName">The name of the file where data will be written</param>
         public static void SaveToPrizeFile(this List<PrizeModel> models, string fileName)
         {
             List<string> lines = new List<string>();
