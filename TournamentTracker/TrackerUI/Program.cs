@@ -30,7 +30,9 @@ namespace TrackerUI
             // if we close this form, even if there are other forms are opened, the application closes
             //Application.Run(new TournamentDashboardForm());
 
-            Application.Run(new CreatePrizeForm());
+            //Application.Run(new CreatePrizeForm());
+
+            Application.Run(new CreateTeamForm());
         }
     }
 }

@@ -55,7 +55,7 @@ namespace TrackerLibrary.DataAccess.TextHelpers
         {
             List<PrizeModel> output = new List<PrizeModel>();
 
-            // The content of the file needs to be in the correct order
+            // In order for the code to work, the content of the file needs to be in the correct order
             // and needs to have valid data
             foreach (string line in lines)
             {
@@ -67,6 +67,36 @@ namespace TrackerLibrary.DataAccess.TextHelpers
                 p.PlaceName = cols[2];
                 p.PrizeAmount = decimal.Parse(cols[3]);
                 p.PrizePercentage = double.Parse(cols[4]);
+
+                output.Add(p);
+            }
+
+            return output;
+        }
+
+
+        /// <summary>
+        /// Convert lines from a csv file to PersonMldel instances
+        /// </summary>
+        /// <param name="lines">Lines of text from a csv file</param>
+        /// <returns>List of PersonModel objects created from each line of a csv file</returns>
+        public static List<PersonModel> ConvertToPersonModels(this List<string> lines)
+        {
+            List<PersonModel> output = new List<PersonModel>();
+
+            // In order for the code to work, the content of the file needs to be in the correct order
+            // and needs to have valid data
+            foreach(string line in lines)
+            {
+                string[] cols = line.Split(',');
+
+                PersonModel p = new PersonModel();
+                p.Id = int.Parse(cols[0]);
+                p.FirstName = cols[1].Trim();
+                p.LastName = cols[2].Trim();
+                p.EmailAddress = cols[3].Trim();
+                p.CellphoneNumber = cols[4].Trim();
+
                 output.Add(p);
             }
 
@@ -74,7 +104,7 @@ namespace TrackerLibrary.DataAccess.TextHelpers
         }
 
         /// <summary>
-        /// Create a csv file with each line representing input data from CreatePrize since the application was launched
+        /// Create a csv file with each line representing input data from CreatePrize form since the application was launched
         /// </summary>
         /// <param name="models">The PrizeModel list to write to a text file</param>
         /// <param name="fileName">The name of the file where data will be written</param>
@@ -87,6 +117,25 @@ namespace TrackerLibrary.DataAccess.TextHelpers
                 lines.Add($"{ p.Id },{ p.PlaceNumber },{ p.PlaceName },{ p.PrizeAmount },{ p.PrizePercentage }");
             }
 
+            // if the file already exists, it is overwritten with the new values and the file is closed
+            File.WriteAllLines(fileName.FullFilePath(), lines);
+        }
+
+        /// <summary>
+        /// Create a csv file with each line representing input data from CreateTeam form since the application was launched
+        /// </summary>
+        /// <param name="models">The PrizeModel list to write to a text file</param>
+        /// <param name="fileName">The name of the file where data will be written</param>
+        public static void SaveToPeopleFile(this List<PersonModel> models, string fileName)
+        {
+            List<string> lines = new List<string>();
+
+            foreach (PersonModel p in models)
+            {
+                lines.Add($"{p.Id},{ p.FirstName },{ p.LastName },{ p.EmailAddress },{ p.CellphoneNumber }");
+            }
+
+            // if the file already exists, it is overwritten with the new values and the file is closed
             File.WriteAllLines(fileName.FullFilePath(), lines);
         }
     }

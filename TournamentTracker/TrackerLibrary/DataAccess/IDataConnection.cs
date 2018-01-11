@@ -12,5 +12,7 @@ namespace TrackerLibrary.DataAccess
         // contract for a method
         // everything in here is public because of the access modifier of the class
         PrizeModel CreatePrize(PrizeModel model);
+
+        PersonModel CreatePerson(PersonModel model);
     }
 }

@@ -11,14 +11,39 @@ namespace TrackerLibrary.DataAccess
     public class TextConnector : IDataConnection
     {
         private const string _PrizesFile = "PrizeModels.csv";
+        private const string _PeopleFile = "PersonModels.csv";
 
-        // TODO - Wire up the CreatePrize for text files.
+        public PersonModel CreatePerson(PersonModel model)
+        {
+            // As a result of the right hand expresion we will have an empty list if the PersonModels.csv file doesn't exist
+            // or a list of PersonModel objects, each one having the values of a text file's row
+            List<PersonModel> people = _PeopleFile.FullFilePath().LoadFile().ConvertToPersonModels();
+
+            int currentId = 1;
+
+            if (people.Count > 0)
+            {
+                currentId = people.OrderByDescending(x => x.Id).First().Id + 1;
+            }
+
+            // add the id to the PersonModel created with user input values from a form
+            model.Id = currentId;
+
+            people.Add(model);
+
+            people.SaveToPeopleFile(_PeopleFile);
+
+            return model;
+        }
+
         public PrizeModel CreatePrize(PrizeModel model)
         {
             // Load the text file and convert teh text to List<PrizeModel>
             // Statement explanation : pass the string from _PrizesFile and pass it to FullFilePath()
             // pass the result to LoadFile()
             // pass the result to ConvertToPrizeModels()
+            // As a result of the right hand expresion we will have an empty list if the PrizeModels.csv file doesn't exist
+            // or a list of PrizeModel objects, each one having the values of a text file's row
             List<PrizeModel> prizes = _PrizesFile.FullFilePath().LoadFile().ConvertToPrizeModels();
 
             int newId = 1;
@@ -31,6 +56,7 @@ namespace TrackerLibrary.DataAccess
                 newId = prizes.OrderByDescending(x => x.Id).First().Id + 1;
             }
 
+            // add the id to the PersonModel created with user input values from a form
             // Use the highest id + 1 as the new id
             model.Id = newId;
 
