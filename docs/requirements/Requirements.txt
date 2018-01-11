@@ -1,0 +1,15 @@
+
+// In order for the code to work, the content of the csv file needs to be in the correct order
+// and needs to have valid data
+
+PrizeModel.csv
+
+line id, place number, place name, (optional) prize amount, prize percentage
+OR
+line id, place number, place name, prize amount, (optional) prize percentage
+
+====================================================================
+
+PersonModel.csv
+
+line id, first name, last name, email, phone
