@@ -1,0 +1,3 @@
+
+1. Change the path where the writing to files will happen.
+   Go to the App.config file, to <configuration> - <appSettings> - <add key="filePath" value="D:\..\fileStorage"/>
