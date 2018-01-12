@@ -11,9 +11,11 @@ namespace TrackerLibrary.DataAccess
 {
     public class SqlConnector : IDataConnection
     {
+        private const string dbName = "Tournaments";
+        
         public PersonModel CreatePerson(PersonModel model)
         {
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(GlobalConfig.CnnString("Tournaments")))
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(GlobalConfig.CnnString(dbName)))
             {
                 var p = new DynamicParameters();
 
@@ -34,7 +36,7 @@ namespace TrackerLibrary.DataAccess
             }
         }
 
-        /// TODO - Make the CreatePrize method actually save to the database
+        /// Make the CreatePrize method actually save to the database
         /// <summary>
         /// Saves a new prize to the database
         /// </summary>
@@ -50,7 +52,7 @@ namespace TrackerLibrary.DataAccess
             // and my application will become slower and slower. Memory usage will go through the roof
             // *** this problem was fixed by the using statement. Even on exceptions, close down the database connection
             // *** open the connection every single time
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(GlobalConfig.CnnString("Tournaments")))
+            using (IDbConnection conn = new System.Data.SqlClient.SqlConnection(GlobalConfig.CnnString(dbName)))
             {
                 var p = new DynamicParameters();
 
@@ -61,7 +63,7 @@ namespace TrackerLibrary.DataAccess
                 p.Add("@id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
 
                 // specific for operations where nothing is returned from the database
-                connection.Execute("dbo.spPrizes_Insert", p, commandType: CommandType.StoredProcedure);
+                conn.Execute("dbo.spPrizes_Insert", p, commandType: CommandType.StoredProcedure);
 
                 // the model will have the Id = the id of the row just inserted in the Prizes table
                 // that's wht id is an output parameter
@@ -69,6 +71,23 @@ namespace TrackerLibrary.DataAccess
 
                 return model;
             }
+        }
+
+        /// <summary>
+        /// Gets all Person data from the Tournaments database
+        /// </summary>
+        /// <param name="model">The person information.</param>
+        /// <returns>A list of PesonModel instances from the Tournaments database</returns>
+        public List<PersonModel> GetPersonAll()
+        {
+            List<PersonModel> output;
+
+            using (IDbConnection conn = new System.Data.SqlClient.SqlConnection(GlobalConfig.CnnString(dbName)))
+            {
+                output = conn.Query<PersonModel>("dbo.spPeople_GetAll").ToList();
+            }
+
+            return output;
         }
     }
 }

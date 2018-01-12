@@ -69,5 +69,15 @@ namespace TrackerLibrary.DataAccess
 
             return model;
         }
+
+        /// <summary>
+        /// Gets all the Person data from PersonModel.csv
+        /// </summary>
+        /// <param name="model">The person information.</param>
+        /// <returns>A list of PesonModel instances from PersonModel.csv</returns>
+        public List<PersonModel> GetPersonAll()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

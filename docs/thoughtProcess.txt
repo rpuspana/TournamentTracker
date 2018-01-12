@@ -1,9 +1,21 @@
-how do we get that connection information ?
+# how do we get that connection information ?
 Ans: use a global variable, static class for data source info. 
 This class will tell me which data sources are available:
 - sql, my sql, text file, text files
 
-how do we connecto to different data sources  to do the same task ?
+# how do we connecto to different data sources  to do the same task ?
 (save either to text file or database or both)
 
-interface for data sources
+# interface for data sources
+
+# CrateTeam form details
+  - multiple tournaments are going on at the same time.
+  - the same person can sign up for the basketball yournament and the ping pong tournament => two different teams
+
+  - ping pong tornament - with 2 players in each team and in the office 7 people
+  - 2 people , 2 people, 2 people, 1 person va fi si la doua echipe diferite
+
+  - o data ce o persoana a fost adaugata in teamMembersListBox nu va mai apare in Select Team Member dropdown
+
+
+
