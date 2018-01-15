@@ -106,5 +106,16 @@ namespace TrackerUI
 
             WireUpLists();
         }
+
+        private void btnRemoveSelectedMember_Click(object sender, EventArgs e)
+        {
+            PersonModel p = (PersonModel)teamMembersListBox.SelectedItem;
+
+            _selectedTeamMembers.Remove(p);
+
+            _availableTeamMembers.Add(p);
+
+            WireUpLists();
+        }
     }
 }
