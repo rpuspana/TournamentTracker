@@ -98,7 +98,16 @@ namespace TrackerUI
 
         private void addMemberButton_Click(object sender, EventArgs e)
         {
+
             PersonModel p = (PersonModel)selectTeamMemberDropDown.SelectedItem;
+
+            if (p == null)
+            {
+                MessageBox.Show("Please select one person from the Select Team Member list in order to add him/her to the team",
+                                "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                return;
+            }
 
             _availableTeamMembers.Remove(p);
 
@@ -111,11 +120,20 @@ namespace TrackerUI
         {
             PersonModel p = (PersonModel)teamMembersListBox.SelectedItem;
 
+            if (p == null)
+            {
+                MessageBox.Show("Please select one person from the Team Members list in order to remove it from the team",
+                                "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                return;
+            }
+
             _selectedTeamMembers.Remove(p);
 
             _availableTeamMembers.Add(p);
 
             WireUpLists();
+
         }
     }
 }

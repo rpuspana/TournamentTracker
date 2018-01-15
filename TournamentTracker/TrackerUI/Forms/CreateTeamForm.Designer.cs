@@ -47,6 +47,7 @@
             this.teamMembersListBox = new System.Windows.Forms.ListBox();
             this.btnRemoveSelectedMember = new System.Windows.Forms.Button();
             this.createTeamButton = new System.Windows.Forms.Button();
+            this.teamMembersLabel = new System.Windows.Forms.Label();
             this.addNewMemberGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -226,9 +227,9 @@
             // 
             this.teamMembersListBox.FormattingEnabled = true;
             this.teamMembersListBox.ItemHeight = 30;
-            this.teamMembersListBox.Location = new System.Drawing.Point(400, 73);
+            this.teamMembersListBox.Location = new System.Drawing.Point(400, 133);
             this.teamMembersListBox.Name = "teamMembersListBox";
-            this.teamMembersListBox.Size = new System.Drawing.Size(354, 454);
+            this.teamMembersListBox.Size = new System.Drawing.Size(354, 394);
             this.teamMembersListBox.TabIndex = 21;
             // 
             // btnRemoveSelectedMember
@@ -262,12 +263,24 @@
             this.createTeamButton.Text = "Create Team";
             this.createTeamButton.UseVisualStyleBackColor = true;
             // 
+            // teamMembersLabel
+            // 
+            this.teamMembersLabel.AutoSize = true;
+            this.teamMembersLabel.Font = new System.Drawing.Font("Segoe UI Light", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.teamMembersLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(153)))), ((int)(((byte)(255)))));
+            this.teamMembersLabel.Location = new System.Drawing.Point(393, 73);
+            this.teamMembersLabel.Name = "teamMembersLabel";
+            this.teamMembersLabel.Size = new System.Drawing.Size(189, 37);
+            this.teamMembersLabel.TabIndex = 24;
+            this.teamMembersLabel.Text = "Team Members";
+            // 
             // CreateTeamForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 30F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(783, 651);
+            this.Controls.Add(this.teamMembersLabel);
             this.Controls.Add(this.createTeamButton);
             this.Controls.Add(this.btnRemoveSelectedMember);
             this.Controls.Add(this.teamMembersListBox);
@@ -310,5 +323,6 @@
         private System.Windows.Forms.ListBox teamMembersListBox;
         private System.Windows.Forms.Button btnRemoveSelectedMember;
         private System.Windows.Forms.Button createTeamButton;
+        private System.Windows.Forms.Label teamMembersLabel;
     }
 }
