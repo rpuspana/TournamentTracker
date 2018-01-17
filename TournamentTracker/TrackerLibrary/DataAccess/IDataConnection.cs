@@ -29,5 +29,12 @@ namespace TrackerLibrary.DataAccess
         /// <param name="model">The person information.</param>
         /// <returns>A list of PesonModel instances from the database or fro a text file</returns>
         List<PersonModel> GetPersonAll();
+
+        /// <summary>
+        /// Insert every team member from a team in the TeamMembers table
+        /// </summary>
+        /// <param name="model">The team information</param>
+        /// <returns>A Team model</returns>
+        TeamModel CreateTeam(TeamModel model);
     }
 }

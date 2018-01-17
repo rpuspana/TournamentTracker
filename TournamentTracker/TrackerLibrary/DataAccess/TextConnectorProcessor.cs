@@ -74,7 +74,6 @@ namespace TrackerLibrary.DataAccess.TextHelpers
             return output;
         }
 
-
         /// <summary>
         /// Convert lines from a csv file to PersonMldel instances
         /// </summary>
@@ -86,7 +85,7 @@ namespace TrackerLibrary.DataAccess.TextHelpers
 
             // In order for the code to work, the content of the file needs to be in the correct order
             // and needs to have valid data
-            foreach(string line in lines)
+            foreach (string line in lines)
             {
                 string[] cols = line.Split(',');
 
@@ -104,7 +103,46 @@ namespace TrackerLibrary.DataAccess.TextHelpers
         }
 
         /// <summary>
-        /// Create a csv file with each line representing input data from CreatePrize form since the application was launched
+        /// Convert lines from TeamModel.csv file to TeamModel instances.
+        /// Each line in the file represents a team.
+        /// Info about TeamModels.csv :
+        /// - Each team member's id should be an id o a person in the PersonModels.csv file
+        /// - Each line of text should respect this rule : 
+        ///     id,team name,teamMember1Id|teamMember2Id|...|teamMembernId
+        ///     Eg:  3,team1,1|3|5
+        /// </summary>
+        /// <param name="lines">Lines of text from a csv file</param>
+        /// <returns>List of TeamModel objects created from each line of a csv file</returns>
+        public static List<TeamModel> ConvertToTeamModels(this List<string> lines, string PeopleFileName)
+        {
+            List<TeamModel> output = new List<TeamModel>();
+
+            List<PersonModel> people = PeopleFileName.FullFilePath().LoadFile().ConvertToPersonModels();
+
+            foreach (string line in lines)
+            {
+                string[] cols = line.Split(',');
+
+                TeamModel t = new TeamModel();
+                t.Id = int.Parse(cols[0].Trim());
+                t.TeamName = cols[1].Trim();
+
+                // get the ids of each team member from a team
+                string[] personIds = cols[2].Split('|');
+
+                // looking up these people ids.
+                // What happens if you have an person Id that you can't find ? blow up with an error
+                foreach (string id in personIds)
+                {
+                    t.TeamMembers.Add(people.Where(x => x.Id == int.Parse(id)).First());
+                }
+            }
+
+            return output;
+        }
+
+        /// <summary>
+        /// Create a csv file with each line representing input data about a prize the user has input
         /// </summary>
         /// <param name="models">The PrizeModel list to write to a text file</param>
         /// <param name="fileName">The name of the file where data will be written</param>
@@ -122,7 +160,7 @@ namespace TrackerLibrary.DataAccess.TextHelpers
         }
 
         /// <summary>
-        /// Create a csv file with each line representing input data from CreateTeam form since the application was launched
+        /// Create a csv file with each line representing Person information about that the user has input
         /// </summary>
         /// <param name="models">The PrizeModel list to write to a text file</param>
         /// <param name="fileName">The name of the file where data will be written</param>
@@ -137,6 +175,49 @@ namespace TrackerLibrary.DataAccess.TextHelpers
 
             // if the file already exists, it is overwritten with the new values and the file is closed
             File.WriteAllLines(fileName.FullFilePath(), lines);
+        }
+
+        /// <summary>
+        /// Create a csv file with each line representing a team created with it's id, name, and team member ids separated by a '|'
+        /// </summary>
+        /// <param name="models"></param>
+        /// <param name="FileName"></param>
+        public static void SaveToTeamFile(this List<TeamModel> models, string FileName)
+        {
+            List<string> lines = new List<string>();
+
+            foreach(TeamModel t in models)
+            {
+                
+                lines.Add($"{ t.Id },{ t.TeamName },{ ConvertPeopleListToString(t.TeamMembers) }");
+            }
+
+            File.WriteAllLines(FileName.FullFilePath(), lines);
+        }
+
+        /// <summary>
+        /// Take a list of PersonModel and return a string with the people id's separated by a '|'
+        /// </summary>
+        /// <param name="people">The list of team members(Person instances)</param>
+        /// <returns>People ids separated by a '|'.</returns>
+        private static string ConvertPeopleListToString(List<PersonModel> people)
+        {
+            string output = "";
+
+            if (people.Count <= 0)
+            {
+                return "";
+            }
+
+            foreach (PersonModel p in people)
+            {
+                output += $"{ p.Id }|";
+            }
+
+            // remove the last '|' at the end of the string
+            output = output.Substring(0, output.Length - 1);
+
+            return output;
         }
     }
 }

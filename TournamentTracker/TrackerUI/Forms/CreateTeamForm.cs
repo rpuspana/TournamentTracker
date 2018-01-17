@@ -14,7 +14,14 @@ namespace TrackerUI
 {
     public partial class CreateTeamForm : Form
     {
+        /// <summary>
+        /// The Person instance list that the user can select team members from
+        /// </summary>
         private List<PersonModel> _availableTeamMembers = GlobalConfig.Connection.GetPersonAll();
+
+        /// <summary>
+        /// The team members (Person instances)
+        /// </summary>
         private List<PersonModel> _selectedTeamMembers = new List<PersonModel>();
 
         public CreateTeamForm()
@@ -139,6 +146,18 @@ namespace TrackerUI
 
             WireUpLists();
 
+        }
+
+        private void createTeamButton_Click(object sender, EventArgs e)
+        {
+            TeamModel newTeam = new TeamModel();
+
+            newTeam.TeamName = teamNameValue.Text.Trim();
+            newTeam.TeamMembers = _selectedTeamMembers;
+
+            newTeam = GlobalConfig.Connection.CreateTeam(newTeam);
+
+            // TODO - If we aren't closing this form after creation, reset the form
         }
     }
 }

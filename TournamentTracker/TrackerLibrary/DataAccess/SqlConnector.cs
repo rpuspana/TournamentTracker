@@ -74,6 +74,40 @@ namespace TrackerLibrary.DataAccess
         }
 
         /// <summary>
+        /// Insert every team member from a team in the TeamMembers table
+        /// </summary>
+        /// <param name="model">The team information</param>
+        /// <returns>A Team model</returns>
+        public TeamModel CreateTeam(TeamModel model)
+        {
+            using (IDbConnection conn = new System.Data.SqlClient.SqlConnection(GlobalConfig.CnnString(dbName)))
+            {
+                // insert the new team in the Teams table
+                var p = new DynamicParameters();
+
+                p.Add("@TeamName", model.TeamName);
+                p.Add("@id", 0, DbType.Int32, ParameterDirection.Output);
+
+                conn.Execute("dbo.spTeamsInsert", p, commandType: CommandType.StoredProcedure);
+
+                model.Id = p.Get<int>("@id");
+
+                // insert each team member(Person instance) in the TeamMembers table
+                foreach (PersonModel teamMember in model.TeamMembers)
+                {
+                    p = new DynamicParameters();
+
+                    p.Add("@TeamId", model.Id);
+                    p.Add("@PersonId", teamMember.Id);
+
+                    conn.Execute("dbo.spTeamMembers_Insert", p, commandType: CommandType.StoredProcedure);
+                }
+
+                return model;
+            }
+        }
+
+        /// <summary>
         /// Gets all Person data from the Tournaments database
         /// </summary>
         /// <param name="model">The person information.</param>

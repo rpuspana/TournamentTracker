@@ -12,6 +12,7 @@ namespace TrackerLibrary.DataAccess
     {
         private const string _PrizesFile = "PrizeModels.csv";
         private const string _PeopleFile = "PersonModels.csv";
+        private const string _TeamFile = "TeamModels.csv";
 
         public PersonModel CreatePerson(PersonModel model)
         {
@@ -29,6 +30,7 @@ namespace TrackerLibrary.DataAccess
             // add the id to the PersonModel created with user input values from a form
             model.Id = currentId;
 
+            // add the new person created by the user to the list of people that will be written to the file
             people.Add(model);
 
             people.SaveToPeopleFile(_PeopleFile);
@@ -60,12 +62,43 @@ namespace TrackerLibrary.DataAccess
             // Use the highest id + 1 as the new id
             model.Id = newId;
 
-            // Add the new record to the new ID(max + 1)
+            // add the new prize created by the user to the list of prizes that will be written to the file
             prizes.Add(model);
 
             // Convert the prizes to a list<string>
             // Save the list<string> to the text file
             prizes.SaveToPrizeFile(_PrizesFile);
+
+            return model;
+        }
+
+        /// <summary>
+        /// Insert every team member from a team in the TeamMembers table
+        /// </summary>
+        /// <param name="model">The team information</param>
+        /// <returns>A Team model</returns>
+        public TeamModel CreateTeam(TeamModel model)
+        {
+            List<TeamModel> teams = _TeamFile.FullFilePath().LoadFile().ConvertToTeamModels(_PeopleFile);
+
+            int newId = 1;
+
+            if (teams.Count > 0)
+            {
+                // Read through to find the highest id and add 1
+                // Statement explanation : order the TeamModel list by the TeamModel Id instance var in descending order, 
+                //                         get the first TeamModel object, get it's id
+                newId = teams.OrderByDescending(x => x.Id).First().Id + 1;
+            }
+
+            // add the id to the TeamModel created with user input values from a form
+            // Use the highest id + 1 as the new id
+            model.Id = newId;
+
+            // add the new team created by the user to the list of teams that will be written to the file
+            teams.Add(model);
+
+            teams.SaveToTeamFile(_TeamFile);
 
             return model;
         }
@@ -77,7 +110,7 @@ namespace TrackerLibrary.DataAccess
         /// <returns>A list of PesonModel instances from PersonModel.csv</returns>
         public List<PersonModel> GetPersonAll()
         {
-            throw new NotImplementedException();
+            return _PeopleFile.FullFilePath().LoadFile().ConvertToPersonModels();
         }
     }
 }

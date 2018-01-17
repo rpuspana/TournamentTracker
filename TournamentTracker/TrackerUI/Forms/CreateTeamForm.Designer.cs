@@ -57,7 +57,6 @@
             this.teamNameValue.Name = "teamNameValue";
             this.teamNameValue.Size = new System.Drawing.Size(344, 35);
             this.teamNameValue.TabIndex = 13;
-            this.teamNameValue.Text = "Team Name";
             // 
             // teamNameLabel
             // 
@@ -262,6 +261,7 @@
             this.createTeamButton.TabIndex = 23;
             this.createTeamButton.Text = "Create Team";
             this.createTeamButton.UseVisualStyleBackColor = true;
+            this.createTeamButton.Click += new System.EventHandler(this.createTeamButton_Click);
             // 
             // teamMembersLabel
             // 
