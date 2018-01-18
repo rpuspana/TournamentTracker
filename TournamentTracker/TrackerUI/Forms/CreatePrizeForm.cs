@@ -15,9 +15,13 @@ namespace TrackerUI.Forms
 {
     public partial class CreatePrizeForm : Form
     {
-        public CreatePrizeForm()
+        private IPrizeRequester callingForm;
+
+        public CreatePrizeForm(IPrizeRequester caller)
         {
             InitializeComponent();
+
+            callingForm = caller;
         }
 
         private void createPrizeButton_Click(object sender, EventArgs e)
@@ -31,12 +35,17 @@ namespace TrackerUI.Forms
 
                 GlobalConfig.Connection.CreatePrize(model);
 
+                // call the parent of this form (who called this form) and pass the PrizeModel instance created with user input
+                callingForm.PrizeComplete(model);
+
                 MessageBox.Show($"{model.PlaceNumber}, {model.PlaceName}, {model.PrizeAmount}, {model.PrizePercentage}", "result", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                placeNameValue.Text = "";
-                placeNumberValue.Text = "";
-                prizeAmountValue.Text = "0";
-                prizePercentageValue.Text = "0";
+                this.Close();
+
+                //placeNameValue.Text = "";
+                //placeNumberValue.Text = "";
+                //prizeAmountValue.Text = "0";
+                //prizePercentageValue.Text = "0";
 
             }
             else

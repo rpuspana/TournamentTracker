@@ -131,11 +131,11 @@
             this.orLabel.AutoSize = true;
             this.orLabel.Font = new System.Drawing.Font("Segoe UI Light", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.orLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(153)))), ((int)(((byte)(255)))));
-            this.orLabel.Location = new System.Drawing.Point(175, 218);
+            this.orLabel.Location = new System.Drawing.Point(95, 220);
             this.orLabel.Name = "orLabel";
-            this.orLabel.Size = new System.Drawing.Size(60, 37);
+            this.orLabel.Size = new System.Drawing.Size(41, 37);
             this.orLabel.TabIndex = 21;
-            this.orLabel.Text = "-or-";
+            this.orLabel.Text = "or";
             // 
             // createPrizeButton
             // 

@@ -123,5 +123,31 @@ namespace TrackerLibrary.DataAccess
 
             return output;
         }
+
+        /// <summary>
+        /// Get all the teams from the database or from a text file
+        /// </summary>
+        /// <returns>A list of teams</returns>
+        public List<TeamModel> GetTeamAll()
+        {
+            List<TeamModel> output;
+
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(GlobalConfig.CnnString(dbName)))
+            {
+                output = connection.Query<TeamModel>("dbo.spTeam_GetAll").ToList();
+
+                foreach(TeamModel team in output)
+                {
+                    var p = new DynamicParameters();
+
+                    p.Add("@TeamId", team.Id);
+
+                    team.TeamMembers = connection.Query<PersonModel>("dbo.spTeamMembers_GetByTeam", p, commandType: CommandType.StoredProcedure).ToList();
+                }
+
+            }
+
+            return output;
+        }
     }
 }

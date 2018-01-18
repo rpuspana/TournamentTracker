@@ -24,7 +24,7 @@ namespace TrackerLibrary.DataAccess
         PersonModel CreatePerson(PersonModel model);
 
         /// <summary>
-        /// Gets all the Person instances from the database or from a text file
+        /// Get all the people from the database or from a text file
         /// </summary>
         /// <param name="model">The person information.</param>
         /// <returns>A list of PesonModel instances from the database or fro a text file</returns>
@@ -36,5 +36,11 @@ namespace TrackerLibrary.DataAccess
         /// <param name="model">The team information</param>
         /// <returns>A Team model</returns>
         TeamModel CreateTeam(TeamModel model);
+
+        /// <summary>
+        /// Get all the teams from the database or from a text file
+        /// </summary>
+        /// <returns></returns>
+        List<TeamModel> GetTeamAll();
     }
 }

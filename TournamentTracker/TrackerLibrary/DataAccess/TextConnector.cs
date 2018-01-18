@@ -104,13 +104,21 @@ namespace TrackerLibrary.DataAccess
         }
 
         /// <summary>
-        /// Gets all the Person data from PersonModel.csv
+        /// Gets all the people from PersonModel.csv
         /// </summary>
-        /// <param name="model">The person information.</param>
         /// <returns>A list of PesonModel instances from PersonModel.csv</returns>
         public List<PersonModel> GetPersonAll()
         {
             return _PeopleFile.FullFilePath().LoadFile().ConvertToPersonModels();
+        }
+
+        /// <summary>
+        /// Gets all the teams from TeamModel.csv
+        /// </summary>
+        /// <returns>A list of PesonModel instances from PersonModel.csv</returns>
+        public List<TeamModel> GetTeamAll()
+        {
+            return _TeamFile.FullFilePath().LoadFile().ConvertToTeamModels(_PeopleFile);
         }
     }
 }

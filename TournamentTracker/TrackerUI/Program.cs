@@ -32,7 +32,7 @@ namespace TrackerUI
 
             //Application.Run(new CreatePrizeForm());
 
-            Application.Run(new CreateTeamForm());
+            Application.Run(new CreateTournamentForm());
         }
     }
 }

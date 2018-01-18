@@ -24,23 +24,30 @@ namespace TrackerUI
         /// </summary>
         private List<PersonModel> _selectedTeamMembers = new List<PersonModel>();
 
-        public CreateTeamForm()
+        /// <summary>
+        /// The form that called the CreateTeamForm
+        /// </summary>
+        private ITeamRequester callingForm;
+
+        public CreateTeamForm(ITeamRequester caller)
         {
             InitializeComponent();
+
+            callingForm = caller;
 
             //CreateSampleData();
 
             WireUpLists();
         }
 
-        private void CreateSampleData()
-        {
-            _availableTeamMembers.Add(new PersonModel { FirstName = "Tim", LastName = "Corey" });
-            _availableTeamMembers.Add(new PersonModel { FirstName = "Sue", LastName = "Storm" });
+        //private void CreateSampleData()
+        //{
+        //    _availableTeamMembers.Add(new PersonModel { FirstName = "Tim", LastName = "Corey" });
+        //    _availableTeamMembers.Add(new PersonModel { FirstName = "Sue", LastName = "Storm" });
 
-            _selectedTeamMembers.Add(new PersonModel { FirstName = "Jane", LastName = "Smith" });
-            _selectedTeamMembers.Add(new PersonModel { FirstName = "Bill", LastName = "Jones" });
-        }
+        //    _selectedTeamMembers.Add(new PersonModel { FirstName = "Jane", LastName = "Smith" });
+        //    _selectedTeamMembers.Add(new PersonModel { FirstName = "Bill", LastName = "Jones" });
+        //}
 
         private void WireUpLists()
         {
@@ -145,7 +152,6 @@ namespace TrackerUI
             _availableTeamMembers.Add(p);
 
             WireUpLists();
-
         }
 
         private void createTeamButton_Click(object sender, EventArgs e)
@@ -155,9 +161,12 @@ namespace TrackerUI
             newTeam.TeamName = teamNameValue.Text.Trim();
             newTeam.TeamMembers = _selectedTeamMembers;
 
-            newTeam = GlobalConfig.Connection.CreateTeam(newTeam);
+            GlobalConfig.Connection.CreateTeam(newTeam);
 
-            // TODO - If we aren't closing this form after creation, reset the form
+            // pass back to the parent form(the form that opened the CreateTeamForm) the new TeamModel created with user input
+            callingForm.TeamComplete(newTeam);
+
+            this.Close();
         }
     }
 }
