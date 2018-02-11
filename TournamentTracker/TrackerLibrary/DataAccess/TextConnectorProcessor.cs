@@ -144,6 +144,62 @@ namespace TrackerLibrary.DataAccess.TextHelpers
         }
 
         /// <summary>
+        /// Insert a tournament in the database/text file
+        /// Insert all of the prizes ids in the database/text file
+        /// Insert all of the teams ids in the database/text file
+        /// Example of line in TournamentModels.csv :
+        /// id,tournamentName,EntryFee,TeamId1|TeamId2|TeamIdN,PrizeId1|PrizeId2|..|PrizeIdN,MatchupModelId1^MatchupModelId2^MatchupModelId3|MatchupModelId4^MatchupModelId5^MatchupModelId6
+        /// </summary>
+        ///  <param name="lines">Lines of text from a csv file</param>
+        /// <returns>List of Tournament objects created from each line of a csv file</returns>
+        public static List<TournamentModel> ConvertToTournamentModels(this List<string> lines, 
+                                                                        string teamFileName,
+                                                                        string peopleFileName,
+                                                                        string prizesFileName)
+        {
+            List<TournamentModel> output = new List<TournamentModel>();
+
+            // get a list of teams from the text file
+            List<TeamModel> teams = teamFileName.FullFilePath().LoadFile().ConvertToTeamModels(peopleFileName);
+
+            // get a list of available prizes from the text file
+            List<PrizeModel> prizes = teamFileName.FullFilePath().LoadFile().ConvertToPrizeModels();
+
+            foreach (string line in lines)
+            {
+                string[] cols = line.Split(',');
+
+                TournamentModel tournamentModel = new TournamentModel();
+
+                tournamentModel.Id = int.Parse(cols[0].Trim());
+                tournamentModel.TournamentName = cols[1].Trim();
+                tournamentModel.EntryFee = decimal.Parse(cols[2].Trim());
+
+                // get all of the team ids in a tournament
+                string[] teamIds = cols[3].Split('|');
+                foreach(string teamId in teamIds)
+                {
+                    // get a team id from Tournametns file and compare it to a all the team ids from the Teams file
+                    // => all the teams corresponding to a tournament
+                    tournamentModel.EnteredTeams.Add(teams.Where(x => x.Id == int.Parse(teamId)).First());
+                }
+
+                // get all of the prize ids in a tournament
+                string[] prizeIds = cols[4].Split('|');
+                foreach (string prizeId in prizeIds)
+                {
+                    tournamentModel.Prizes.Add(prizes.Where(x => x.Id == int.Parse(prizeId)).First());
+                }
+
+                // TODO - Capture rounds information
+
+                output.Add(tournamentModel);
+            }
+
+            return output;
+        }
+
+        /// <summary>
         /// Create a csv file with each line representing input data about a prize the user has input
         /// </summary>
         /// <param name="models">The PrizeModel list to write to a text file</param>
@@ -182,8 +238,8 @@ namespace TrackerLibrary.DataAccess.TextHelpers
         /// <summary>
         /// Create a csv file with each line representing a team created with it's id, name, and team member ids separated by a '|'
         /// </summary>
-        /// <param name="models"></param>
-        /// <param name="FileName"></param>
+        /// <param name="models">List to TeamModel objects</param>
+        /// <param name="FileName">The file where each TeamModel instance will be saved</param>
         public static void SaveToTeamFile(this List<TeamModel> models, string FileName)
         {
             List<string> lines = new List<string>();
@@ -198,7 +254,148 @@ namespace TrackerLibrary.DataAccess.TextHelpers
         }
 
         /// <summary>
-        /// Take a list of PersonModel and return a string with the people id's separated by a '|'
+        /// Save each matcup corresponding to a round in a file
+        /// Save each round to a file with the corresponding matchup ids
+        /// </summary>
+        /// <param name="model">Tournament model</param>
+        /// <param name="MatchupFile">The file where the matchups will be written to</param>
+        /// <param name="MatchupEntryFile">The file where the rounds will be written to</param>
+        public static void SaveRoundsToFile(this TournamentModel model, string matchupFile, string matchupEntryFile)
+        {
+            // Loop through each round
+            foreach (List<MatchupModel> round in model.Rounds)
+            {
+                // Loop through each matchup
+                foreach (MatchupModel matchup in round)
+                {
+                    // Load all of the matchups from file
+                    // Get the top id and add one
+                    // Store the id
+                    // Save the matchup record
+                    matchup.SaveMatchupToFile(matchupFile, matchupEntryFile);
+
+                   
+                }
+            }
+
+            // Get the id for the new matchup and save the record
+            // Loop through each entry, get the id and save it.
+        }
+
+        public static List<MatchupEntryModel> ConvertToMatchupEntryModels(this List<string> lines)
+        {
+            // id = column 0, TeamCompeting id = column 1, Score = column 2, ParentMatchup = column 3
+            List<MatchupEntryModel> output = new List<MatchupEntryModel>();
+
+            foreach (string line in lines)
+            {
+                string[] cols = line.Split(',');
+
+                MatchupEntryModel mem = new MatchupEntryModel();
+                mem.Id = int.Parse(cols[0]);
+                mem.TeamCompeting = LookupTeamById(int.Parse(cols[1]));
+                mem.Score = double.Parse(cols[2]);
+                mem.ParentMatchup = LookupMatchupById(int.Parse(cols[3]));
+            }
+
+        }
+
+        private static List<MatchupEntryModel> ConvertStringToMatchupEntryModels(string input)
+        {
+            string[] ids = input.Split('|');
+            List<MatchupEntryModel> output = new List<MatchupEntryModel>();
+            List<MatchupEntryModel> entries = GlobalConfig
+                                              .MatchupEntryFile
+                                              .FullFilePath()
+                                              .LoadFile()
+                                              .ConvertToMatchupEntryModels();
+
+            foreach (string id in ids)
+            {
+                output.Add(entries.Where(x => x.Id == int.Parse(id)).First());
+            }
+
+            return output;
+        }
+
+        private static TeamModel LookupTeamById(int id)
+        {
+            List<TeamModel> teams = GlobalConfig
+                                    .TeamFile
+                                    .FullFilePath()
+                                    .LoadFile()
+                                    .ConvertToTeamModels(GlobalConfig.PeopleFile);
+
+            return teams.Where(x => x.Id == id).First();
+        }
+
+        /// <summary>
+        /// Convert lines from a csv file to MatchupModel instances
+        /// </summary>
+        /// <param name="lines">Lines of text from a csv file</param>
+        /// <returns>List of MatchupModel objects created from each line of a csv file</returns>
+        public static List<MatchupModel> ConvertToMatchupModels(this List<string> lines)
+        {
+            // id=0, entries=1(pipe delmited by id), winner=2, matchupRound=3
+            List<MatchupModel> output = new List<MatchupModel>();
+
+            // In order for the code to work, the content of the file needs to be in the correct order
+            // and needs to have valid data
+            foreach (string line in lines)
+            {
+                string[] cols = line.Split(',');
+
+                MatchupModel p = new MatchupModel();
+                p.Id = int.Parse(cols[0]);
+                p.Entries = ConvertStringToMatchupEntryModels(cols[1]);
+                p.Winner = LookupTeamById(int.Parse(cols[2]));
+                p.MatchupRound = int.Parse(cols[3]);
+
+                output.Add(p);
+            }
+
+            return output;
+        }
+
+        public static void SaveMatchupToFile(this MatchupModel matchup, string matchupFile, string matchupEntryFile)
+        {
+            foreach (MatchupEntryModel entry in matchup.Entries)
+            {
+                entry.SaveEntryToFile(matchupEntryFile);
+            }
+        }
+
+
+        public static void SaveEntryToFile(this MatchupEntryModel entry,  string matchupEntryFile)
+        {
+            
+        }
+
+        /// <summary>
+        /// Create a csv file with each line representing a tournament created with it's id, name, team ids, and matchups
+        /// Example of line in TournamentModels.csv :
+        /// tournamentId,tournamentName,entryFee,TeamId1|TeamId2|TeamIdN,PrizeId1|PrizeId2|..|PrizeIdN,MatchupModelId1^MatchupModelId2^MatchupModelId3|MatchupModelId4^MatchupModelId5^MatchupModelId6
+        /// </summary>
+        /// <param name="models">List to TournamentModel objects</param>
+        public static void SaveToTournamentFile(this List<TournamentModel> models, string fileName)
+        {
+            List<string> lines = new List<string>();
+            string tournamentEntries;
+
+            foreach (TournamentModel tm in models)
+            {
+                tournamentEntries = string.Concat($"{ tm.Id },{ tm.TournamentName },{ tm.EntryFee },",
+                                                  $"{ ConvertTeamListToString(tm.EnteredTeams) },{ ConvertPrizeListToString(tm.Prizes) }",
+                                                  $"{ ConvertRoundListToString(tm.Rounds) }");
+
+                lines.Add(tournamentEntries);
+            }
+
+            File.WriteAllLines(fileName.FullFilePath(), lines);
+        }
+
+        /// <summary>
+        /// Take a list of PersonModel and return a string of people ids separated by a '|'
         /// </summary>
         /// <param name="people">The list of team members(Person instances)</param>
         /// <returns>People ids separated by a '|'.</returns>
@@ -217,6 +414,108 @@ namespace TrackerLibrary.DataAccess.TextHelpers
             }
 
             // remove the last '|' at the end of the string
+            output = output.Substring(0, output.Length - 1);
+
+            return output;
+        }
+
+        /// <summary>
+        /// Take a list of TeamModel and return a string of team member ids separated by a '|'
+        /// </summary>
+        /// <param name="teams">The list of teams</param>
+        /// <returns>Team member ids separated by a '|'.</returns>
+        private static string ConvertTeamListToString(List<TeamModel> teams)
+        {
+            string output = "";
+
+            if (teams.Count <= 0)
+            {
+                return "";
+            }
+
+            foreach (TeamModel t in teams)
+            {
+                output += $"{ t.Id }|";
+            }
+
+            // remove the last '|' at the end of the string
+            output = output.Substring(0, output.Length - 1);
+
+            return output;
+        }
+
+        /// <summary>
+        /// Take a list of PrizeModel and return a string of prize id's separated by a '|'
+        /// </summary>
+        /// <param name="prizes">The list of teams</param>
+        /// <returns>Tournament prize ids separated by a '|'.</returns>
+        private static string ConvertPrizeListToString(List<PrizeModel> prizes)
+        {
+            string output = "";
+
+            if (prizes.Count <= 0)
+            {
+                return "";
+            }
+
+            foreach (PrizeModel p in prizes)
+            {
+                output += $"{ p.Id }|";
+            }
+
+            // remove the last '|' at the end of the string
+            output = output.Substring(0, output.Length - 1);
+
+            return output;
+        }
+
+        /// <summary>
+        /// Take a list of a list of MatchcupModel ids and return a string of MatchupModelId1^MatchupModelId2^MatchupModelId3|MatchupModelId4^MatchupModelId5^MatchupModelId6
+        /// </summary>
+        /// <param name="rounds">The list of a list of MatchupoModel instances</param>
+        /// <returns>Matchups separated in rounds</returns>
+        private static string ConvertRoundListToString(List<List<MatchupModel>> rounds)
+        {
+            // MatchupModelId1^MatchupModelId2^MatchupModelId3|MatchupModelId4^MatchupModelId5^MatchupModelId6
+
+            string output = "";
+
+            if (rounds.Count <= 0)
+            {
+                return "";
+            }
+
+            foreach (List<MatchupModel> listMatchupModel in rounds)
+            {
+                output += $"{ ConvertMatchupListToString(listMatchupModel) }|";
+            }
+
+            // remove the last '|' at the end of the string
+            output = output.Substring(0, output.Length - 1);
+
+            return output;
+        }
+
+        /// <summary>
+        /// Take a list of MatchcupModel ids and return a string of matchup model ids separated by ^
+        /// </summary>
+        /// <param name="rounds">The list of a list of MatchupoModel instances</param>
+        /// <returns>string of matchup ids in a game round, separated by '^'</returns>
+        private static string ConvertMatchupListToString(List<MatchupModel> matchups)
+        {
+            string output = "";
+
+            if (matchups.Count <= 0)
+            {
+                return "";
+            }
+
+            foreach (MatchupModel matchupModel in matchups)
+            {
+                output += $"{ matchupModel.Id }^";
+            }
+
+            // remove the last '^' at the end of the string
             output = output.Substring(0, output.Length - 1);
 
             return output;

@@ -54,11 +54,17 @@
     <Compile Include="Models\PrizeModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\TeamModel.cs" />
-    <Compile Include="Models\TurnamentModel.cs" />
+    <Compile Include="Models\TournamentModel.cs" />
     <Compile Include="DataAccess\SqlConnector.cs" />
     <Compile Include="DataAccess\TextConnector.cs" />
+    <Compile Include="TournamentLogic.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\DynamicQuery\DynamicQuery\DynamicQuery.csproj">
+      <Project>{f285ceb0-4108-440c-ad94-1c1a7c159d7c}</Project>
+      <Name>DynamicQuery</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

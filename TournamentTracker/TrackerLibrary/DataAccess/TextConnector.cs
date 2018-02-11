@@ -10,9 +10,12 @@ namespace TrackerLibrary.DataAccess
 {
     public class TextConnector : IDataConnection
     {
-        private const string _PrizesFile = "PrizeModels.csv";
-        private const string _PeopleFile = "PersonModels.csv";
-        private const string _TeamFile = "TeamModels.csv";
+        private const string _PrizesFile       = "PrizeModels.csv";
+        private const string _PeopleFile       = "PersonModels.csv";
+        private const string _TeamFile         = "TeamModels.csv";
+        private const string _TournamentsFile  = "TournamentModels.csv";
+        private const string _MatchupFile      = "MatchupModels.csv";
+        private const string _MatchupEntryFile = "MatchupEntryModels";
 
         public PersonModel CreatePerson(PersonModel model)
         {
@@ -101,6 +104,36 @@ namespace TrackerLibrary.DataAccess
             teams.SaveToTeamFile(_TeamFile);
 
             return model;
+        }
+
+        /// <summary>
+        /// Insert a tournament in to a database/text file
+        /// </summary>
+        /// <returns>A TournamentModel</returns>
+        public void CreateTournament(TournamentModel model)
+        {
+            List<TournamentModel> tournaments = _TeamFile
+                                                .FullFilePath()
+                                                .LoadFile()
+                                                .ConvertToTournamentModels(_TeamFile, _PeopleFile, _PrizesFile);
+
+            int currentId = 1;
+
+            if (tournaments.Count > 0)
+            {
+                // Read through to find the highest id and add 1
+                // Statement explanation : order the TournamentsModel list by the TournamentsModel Id instance var in descending order, 
+                //                         get the first TournamentsModel object, get it's id
+                currentId = tournaments.OrderByDescending(x => x.Id).First().Id + 1;
+
+                model.Id = currentId;
+
+                model.SaveRoundsToFile(_MatchupFile, _MatchupEntryFile);
+
+                tournaments.Add(model);
+
+                tournaments.SaveToTournamentFile(_TournamentsFile);
+            }
         }
 
         /// <summary>

@@ -34,13 +34,21 @@ namespace TrackerLibrary.DataAccess
         /// Insert every team member from a team in the TeamMembers table
         /// </summary>
         /// <param name="model">The team information</param>
-        /// <returns>A Team model</returns>
+        /// <returns>A TeamModel</returns>
         TeamModel CreateTeam(TeamModel model);
+
+        /// <summary>
+        /// Insert a tournament in the database/text file
+        /// Insert all of the prizes ids in the database/text file
+        /// Insert all of the teams ids in the database/text file
+        /// </summary>
+        /// <returns>A TournamentModel</returns>
+        void CreateTournament(TournamentModel model);
 
         /// <summary>
         /// Get all the teams from the database or from a text file
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List of teams</returns>
         List<TeamModel> GetTeamAll();
     }
 }

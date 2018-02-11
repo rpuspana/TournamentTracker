@@ -1,3 +1,9 @@
 
 1. Change the path where the writing to files will happen.
    Go to the App.config file, to <configuration> - <appSettings> - <add key="filePath" value="D:\..\fileStorage"/>
+
+2. TournamentModels.csv structure
+   id,tournamentName,EntryFee,(TeamId1|TeamId2|TeamIdN),(PrizeId1|PrizeId2|PrizeIdN),(MatchupModelId1^MatchupModelId2^MatchupModelId3|MatchupModelId4^MatchupModelId5^MatchupModelId6)
+
+3. PersonModels.csv file structure
+   id,team name,teamMember1Id|teamMember2Id|...|teamMembernId

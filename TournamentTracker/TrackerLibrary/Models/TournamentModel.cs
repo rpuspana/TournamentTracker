@@ -6,8 +6,13 @@ using System.Threading.Tasks;
 
 namespace TrackerLibrary.Models
 {
-    public class TurnamentModel
+    public class TournamentModel
     {
+        /// <summary>
+        /// The unique identifier for a tournament
+        /// </summary>
+        public int Id { get; set; }
+
         /// <summary>
         /// The name given to this tournament.
         /// </summary>

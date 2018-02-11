@@ -78,7 +78,7 @@ namespace TrackerUI
             if (teamModel == null)
             {
                 MessageBox.Show("Please select one team from the Select Team list in order to add a team to the tournament",
-                                "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                "", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 return;
             }
@@ -130,7 +130,7 @@ namespace TrackerUI
             if (team == null)
             {
                 MessageBox.Show("Please select one team from the list and click this button again",
-                                "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                "", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 return;
             }
@@ -149,7 +149,7 @@ namespace TrackerUI
             if (prize == null)
             {
                 MessageBox.Show("Please select one prize from the Prizes list and click this button again",
-                                "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                "", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 return;
             }
@@ -157,6 +157,39 @@ namespace TrackerUI
             _selectedPrizes.Remove(prize);
 
             WireUpLists();
+        }
+
+        private void createTournamentButton_Click(object sender, EventArgs e)
+        {
+            // validate data
+            decimal entryFee = 0;
+            bool feeAcceptable = decimal.TryParse(entryFeeValue.Text, out entryFee);
+
+            // create the tournament model
+            TournamentModel tournamentModel = new TournamentModel();
+
+            // create tournament entry
+            tournamentModel.TournamentName = tournamentNameValue.Text;
+
+             if (!feeAcceptable)
+             {
+                MessageBox.Show("You need to enter a floating point number for the entry fee.",
+                               "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                return;
+            }
+
+            tournamentModel.EntryFee = entryFee;
+            tournamentModel.Prizes = _selectedPrizes;
+            tournamentModel.EnteredTeams = _selectedTeams;
+
+            // Create matchups between two teams, tournament rounds, and establish winner
+            TournamentLogic.CreateRounds(tournamentModel);
+
+            // Save the tournament's name and entry fee in a database/text file
+            // Save all the prizes ids in a database/text file
+            // Save all the teams ids participating in the tournament in a database/text file
+            GlobalConfig.Connection.CreateTournament(tournamentModel);
         }
     }
 }
