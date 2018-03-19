@@ -1,4 +1,4 @@
-Organise a tournament with various teams(each having various members), rounds and prizes.
+Organise a tournament with various teams(each having various members), rounds and prizes - project under development
 
 The application can save this data inside various files, locally, or inside a database (at March 2018 only a Microsoft SQL database can be used).
 
