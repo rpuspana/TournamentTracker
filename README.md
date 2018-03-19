@@ -1,6 +1,6 @@
-Organise a tournament with various teams(each having various members) and prizes.
+Organise a tournament with various teams(each having various members), rounds and prizes.
 
-Data will persist inside varios files inside the fileStorage folder
+The application can save this data inside various files, locally, or inside a database (at March 2018 only a Microsoft SQL database can be used).
 
 Don't forget to include the file /TournamentTracker/TrackerUI/App.config for the application to work.
 The content of the App.config file should be this:
