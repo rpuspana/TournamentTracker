@@ -2,6 +2,8 @@ Organise a tournament with various teams(each having various members), rounds an
 
 The application can save this data inside various files, locally, or inside a database (at March 2018 only a Microsoft SQL database can be used).
 
+Technologies used: C# .Net Windows Forms SQL Management Studio
+
 Don't forget to include the file /TournamentTracker/TrackerUI/App.config for the application to work.
 The content of the App.config file should be this:
 
