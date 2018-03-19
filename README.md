@@ -5,6 +5,7 @@ Data will persist inside varios files inside the fileStorage folder
 Don't forget to include the file /TournamentTracker/TrackerUI/App.config for the application to work.
 The content of the App.config file should be this:
 
+```
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
     <appSettings>
@@ -17,3 +18,4 @@ The content of the App.config file should be this:
         <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.5" />
     </startup>   
 </configuration>
+```
