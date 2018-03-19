@@ -317,5 +317,5 @@ ASALocalRun/
 # Project files
 docs/details.txt
 docs/requirements/*.png
-/TournamentTracker/TrackerUI/App.config
 /fileStorage
+/TournamentTracker/TrackerUI/App.config
