@@ -1,8 +1,8 @@
 # Project files
-docs/
-sqlScripts/
-fileStorage/
-TournamentTracker/TrackerUI/App.config
+/docs/
+/sqlScripts/
+/fileStorage/
+/TournamentTracker/TrackerUI/App.config
 
 
 ## Ignore Visual Studio temporary files, build results, and
